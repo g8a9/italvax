@@ -29,13 +29,14 @@ class ScatterConsegnateSomministrate:
         self.vax_summary = vax_summary
 
     def get_figure(self):
-        return px.scatter(
+        fig = px.scatter(
             self.vax_summary,
             x="dosi_consegnate",
             y="dosi_somministrate",
             size="percentuale_somministrazione",
             color="percentuale_somministrazione",
         )
+        return fig
 
 
 class BarBySex:
@@ -43,10 +44,15 @@ class BarBySex:
         self.somm_vacc_latest = somm_vacc_latest
 
     def get_figure(self):
-        return px.bar(
+        fig = px.bar(
             self.somm_vacc_latest.groupby("area").sum().sort_values("total"),
             y=["sesso_femminile", "sesso_maschile"],
         )
+        fig.update_layout(
+            legend=dict(yanchor="top", xanchor="left", y=0.99, x=0.01),
+            legend_title_text="",
+        )
+        return fig
 
 
 class PieSex:
@@ -71,7 +77,7 @@ class BarByOccupation:
         self.somm_vacc_latest = somm_vacc_latest
 
     def get_figure(self):
-        return px.bar(
+        fig = px.bar(
             self.somm_vacc_latest.groupby("area").sum().sort_values("total"),
             y=[
                 "categoria_operatori_sanitari_sociosanitari",
@@ -79,3 +85,8 @@ class BarByOccupation:
                 "categoria_personale_non_sanitario",
             ],
         )
+        fig.update_layout(
+            legend=dict(yanchor="top", xanchor="left", y=0.99, x=0.01),
+            legend_title_text="",
+        )
+        return fig

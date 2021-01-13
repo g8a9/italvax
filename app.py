@@ -1,10 +1,15 @@
 import dash
 import dash_core_components as dcc
+from dash_core_components import Graph
 import dash_html_components as html
+import dash_bootstrap_components as dbc
+from dash_bootstrap_components import Row, Col, Card
+
 import plotly.express as px
 import pandas as pd
 import json
 from charts import *
+from layout import *
 
 
 # Data retrieval and preprocessing
@@ -80,19 +85,34 @@ bbo = BarByOccupation(somm_vacc_latest)
 
 # DASH APP
 
-app = dash.Dash(__name__)
+app = dash.Dash(
+    __name__,
+    title="ItalVax",
+    update_title="Loading...",
+    external_stylesheets=[dbc.themes.LUMEN],
+)
 
-app.layout = html.Div(
-    children=[
-        html.H1(children="ItalVax"),
-        html.Div(children="""Da un'idea molto semplice."""),
-        dcc.Graph(id="italy-choropleth", figure=ic.get_figure()),
-        dcc.Graph(id="scatter-consegnate-somministrate", figure=scs.get_figure()),
-        dcc.Graph(id="bar-by-sex", figure=bbs.get_figure()),
-        dcc.Graph(id="pie-by-sex", figure=pbs.get_figure()),
-        dcc.Graph(id="bar-by-occupation", figure=bbo.get_figure()),
+
+app.layout = dbc.Container(
+    [
+        HEADER,
+        Row(
+            Col(Graph(id="italy-choropleth", figure=ic.get_figure())),
+        ),
+        Row(
+            Col(Graph(id="scatter-consegnate-somministrate2", figure=scs.get_figure()))
+        ),
+        Row(
+            [
+                Col(Graph(id="bar-by-sex", figure=bbs.get_figure()), width=8),
+                Col(Graph(id="pie-by-sex", figure=pbs.get_figure()), width=4),
+            ]
+        ),
+        Row([Col(Graph(id="bar-by-occupation", figure=bbo.get_figure()))]),
+        NOTE,
     ]
 )
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
